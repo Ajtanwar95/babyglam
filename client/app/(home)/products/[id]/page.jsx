@@ -21,7 +21,7 @@ import Link from 'next/link';
 import { toggleCart, addToCart, addToWishlist, removeFromWishlist } from '@/app/redux/slices/cartSlice';
 import { fetchProducts } from '@/app/redux/slices/productsSlice';
 import CartSidebar from '@/app/components/CartSidebar/CartSidebar';
-import Reviews from '@/app/components/Reviews/page';
+import Reviews from '@/app/components/Reviews/Reviews';
 
 const ProductDetail = () => {
   const dispatch = useDispatch();
