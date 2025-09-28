@@ -54,13 +54,12 @@ export default function Footer() {
             {[
               { name: "Home", link: "/" },
               { name: "About", link: "/about" },
-              { name: "Register", link: "/register" },
-              { name: "Login", link: "/login" },
-              { name: "Help Center", link: "/help" },
-              { name: "My Account", link: "/account" },
-              { name: "Privacy Policy", link: "/privacy-policy" },
-              { name: "Terms & Conditions", link: "/terms" },
+              { name: "Returns Policy", link: "/returns" },
+              { name: "Shipping", link: "/shipping" },
+              { name: "Privacy Policy", link: "/privacy" },
+              // { name: "Cancellation", link: "/cancellation" },
               { name: "Contact Us", link: "/contact" },
+              { name: "Terms and Conditions", link: "/terms" },
             ].map((item) => (
               <li key={item.name}>
                 <Link
@@ -84,13 +83,13 @@ export default function Footer() {
             100% secure payments with trusted methods
           </p>
           <div className="flex flex-wrap gap-5">
-            {["upi", "visa", "mastercard", "bank"].map((method) => (
+            {["upi2", "visa1", "mastercard1", "bank3"].map((method) => (
               <Image
                 key={method}
                 src={`/assets/${method}.svg`}
                 alt={method}
                 width={50}
-                height={35}
+                height={50}
                 className="hover:scale-125 hover:-rotate-6 transition-transform duration-300"
               />
             ))}
@@ -109,7 +108,7 @@ export default function Footer() {
             <input
               type="email"
               placeholder="Enter your email"
-              className="w-full px-4 py-2 rounded-full text-gray-800 focus:outline-none focus:ring-2 focus:ring-[#ffffff80]"
+              className="w-full px-4 py-2 border-amber-200 rounded-full text-gray-800 focus:outline-none focus:ring-2 focus:ring-[#ffffff80]"
             />
             <button
               type="submit"
