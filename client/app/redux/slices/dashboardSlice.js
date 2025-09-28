@@ -1,19 +1,19 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import axios from 'axios';
-
+import API_BASE_URL  from '../../config/apiConfig';
 // Thunks for async API calls
 export const fetchMetrics = createAsyncThunk('dashboard/fetchMetrics', async () => {
-  const response = await axios.get('/api/v2/dashboard/metrics');
+  const response = await axios.get(`${API_BASE_URL}/dashboard/metrics`);
   return response.data;
 });
 
 export const fetchRecentOrders = createAsyncThunk('dashboard/fetchRecentOrders', async () => {
-  const response = await axios.get('/api/v2/dashboard/orders');
+  const response = await axios.get(`${API_BASE_URL}/dashboard/recent-orders`);
   return response.data;
 });
 
 export const fetchSalesData = createAsyncThunk('dashboard/fetchSalesData', async () => {
-  const response = await axios.get('/api/v2/dashboard/sales');
+  const response = await axios.get(`${API_BASE_URL}/dashboard/sales`);
   return {
     labels: response.data.labels,
     datasets: [
@@ -29,7 +29,7 @@ export const fetchSalesData = createAsyncThunk('dashboard/fetchSalesData', async
 });
 
 export const fetchCategoryData = createAsyncThunk('dashboard/fetchCategoryData', async () => {
-  const response = await axios.get('/api/v2/dashboard/categories');
+  const response = await axios.get(`${API_BASE_URL}/dashboard/categories`);
   return {
     labels: response.data.labels,
     datasets: [

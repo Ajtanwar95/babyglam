@@ -1,8 +1,8 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import axios from 'axios';
-
+import API_BASE_URL  from '../../config/apiConfig';
 export const fetchReviews = createAsyncThunk('reviews/fetchReviews', async (productId) => {
-  const response = await axios.get(`http://localhost:5000/api/v2/reviews?productId=${productId}`);
+  const response = await axios.get(`${API_BASE_URL}/reviews?productId=${productId}`);
   return response.data;
 });
 
@@ -15,7 +15,7 @@ export const createReview = createAsyncThunk('reviews/createReview', async (revi
     formData.append('email', reviewData.email || '');
     if (reviewData.file) formData.append('file', reviewData.file);
 
-    const response = await axios.post(`http://localhost:5000/api/v2/reviews/${reviewData.productId}`, formData, {
+    const response = await axios.post(`${API_BASE_URL}/reviews/${reviewData.productId}`, formData, {
       headers: { 'Content-Type': 'multipart/form-data' },
     });
     return response.data;
@@ -33,7 +33,7 @@ export const updateReview = createAsyncThunk('reviews/updateReview', async (revi
     formData.append('email', reviewData.email || '');
     if (reviewData.file) formData.append('file', reviewData.file);
 
-    const response = await axios.patch(`http://localhost:5000/api/v2/reviews/${reviewData._id}`, formData, {
+    const response = await axios.patch(`${API_BASE_URL}/reviews/${reviewData._id}`, formData, {
       headers: { 'Content-Type': 'multipart/form-data' },
     });
     return response.data;
@@ -44,7 +44,7 @@ export const updateReview = createAsyncThunk('reviews/updateReview', async (revi
 
 export const deleteReview = createAsyncThunk('reviews/deleteReview', async (id, { rejectWithValue }) => {
   try {
-    await axios.delete(`http://localhost:5000/api/v2/reviews/${id}`);
+    await axios.delete(`${API_BASE_URL}/reviews/${id}`);
     return id;
   } catch (error) {
     return rejectWithValue(error.response.data);
