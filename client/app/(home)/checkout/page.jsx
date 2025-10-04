@@ -50,7 +50,7 @@ export default function Checkout() {
     setLoading(true);
     try {
       console.log('Creating order with amount:', calculateTotal());
-      const response = await axios.post(`https://babyglam.onrender.com/api/v2/payments/create-order`, {
+      const response = await axios.post(`${API_BASE_URL}/payments/create-order`, {
         amount: calculateTotal(),
       }, {
         headers: { 'Content-Type': 'application/json' },
@@ -68,14 +68,14 @@ export default function Checkout() {
         order_id: order_id,
         handler: async (response) => {
           const { razorpay_payment_id, razorpay_order_id, razorpay_signature } = response;
-          const verifyResponse = await axios.post(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v2/payments/verify-payment`, {
+          const verifyResponse = await axios.post(`${API_BASE_URL}/payments/verify-payment`, {
             razorpay_order_id,
             razorpay_payment_id,
             razorpay_signature,
           });
 
           if (verifyResponse.data.success) {
-            await axios.post(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v2/orders`, {
+            await axios.post(`${API_BASE_URL}/orders`, {
               items: cart.items,
               total: calculateTotal(),
               address,
