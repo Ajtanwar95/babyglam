@@ -9,7 +9,7 @@ import { Label } from '@/components/ui/label';
 import { toast } from 'react-toastify';
 import axios from 'axios';
 import { clearCart } from '@/app/redux/slices/cartSlice';
-
+import API_BASE_URL  from '../../config/apiConfig';
 export default function Checkout() {
   const router = useRouter();
   const dispatch = useDispatch();
@@ -50,7 +50,7 @@ export default function Checkout() {
     setLoading(true);
     try {
       console.log('Creating order with amount:', calculateTotal());
-      const response = await axios.post(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v2/payments/create-order`, {
+      const response = await axios.post(`${API_BASE_URL}/api/v2/payments/create-order`, {
         amount: calculateTotal(),
       }, {
         headers: { 'Content-Type': 'application/json' },
