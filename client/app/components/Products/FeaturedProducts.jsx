@@ -31,12 +31,11 @@ const FeaturedProducts = () => {
     toast.success(`Proceeding with COD for ${product.title}.`, {
       style: { background: '#10B981', color: '#fff' },
     });
-    window.location.href = `/checkout?method=cod&productId=${product._id}&quantity=1`;
+    window.location.href = `/checkout?method=cod`; // Redirect to checkout with method
   };
 
   return (
-    <div className="min-h-screen bg-white  dark:from-gray-800 dark:to-gray-900">
-      {/* Product Grid */}
+    <div className="min-h-screen bg-white dark:from-gray-800 dark:to-gray-900">
       <section id="products" className="py-12 px-4 sm:px-6 md:px-8">
         <div className="max-w-5xl mx-auto">
           <h2 className="text-3xl font-serif text-gray-800 dark:text-gray-100 mb-6 tracking-wide">Our Products</h2>
@@ -49,17 +48,13 @@ const FeaturedProducts = () => {
           ) : (
             <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
               {products.map((product) => (
-                <Link
-                  key={product._id}
-                  href={`/products/${product._id}`}
-                  className="block group"
-                >
+                <Link key={product._id} href={`/products/${product._id}`} className="block group">
                   <Card className="shadow-md hover:shadow-xl transition-shadow duration-300 transform group-hover:scale-105">
                     <CardHeader>
                       <img
                         src={product.media[0] || '/placeholder.png'}
                         alt={product.title}
-                        className=" h-28 w-full object-contain rounded-t-xl transition-transform duration-500 group-hover:scale-110"
+                        className="h-28 w-full object-contain rounded-t-xl transition-transform duration-500 group-hover:scale-110"
                       />
                     </CardHeader>
                     <CardContent>
@@ -74,7 +69,7 @@ const FeaturedProducts = () => {
                     <CardFooter className="flex gap-2">
                       <Button
                         onClick={(e) => {
-                          e.preventDefault(); // Prevent Link navigation
+                          e.preventDefault();
                           handleAddToCart(product);
                         }}
                         className="flex-1 bg-gradient-to-r from-blue-500 to-pink-500 hover:from-blue-600 hover:to-pink-600 transform hover:scale-105 transition-transform"
@@ -83,7 +78,7 @@ const FeaturedProducts = () => {
                       </Button>
                       <Button
                         onClick={(e) => {
-                          e.preventDefault(); // Prevent Link navigation
+                          e.preventDefault();
                           handleCOD(product);
                         }}
                         variant="outline"
@@ -99,7 +94,6 @@ const FeaturedProducts = () => {
           )}
         </div>
       </section>
-      {/* Cart Sidebar */}
       <CartSidebar products={products} />
     </div>
   );

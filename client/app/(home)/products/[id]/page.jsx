@@ -3,13 +3,12 @@ import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useParams } from 'next/navigation';
 import { Button } from '@/components/ui/button';
-import { Card, CardContent} from '@/components/ui/card';
+import { Card, CardContent } from '@/components/ui/card';
 import {
   ShoppingCart,
   Package,
   Heart,
   Share2,
- 
   ChevronLeft,
   ChevronRight,
   Minus,
@@ -28,12 +27,11 @@ const ProductDetail = () => {
   const { id } = useParams();
   const { items: products, status } = useSelector((state) => state.products);
   const cart = useSelector((state) => state.cart);
-  const wishlist = cart?.wishlist || []; // Fallback to empty array
+  const wishlist = cart?.wishlist || [];
   const [product, setProduct] = useState(null);
   const [quantity, setQuantity] = useState(1);
   const [selectedImage, setSelectedImage] = useState(0);
   const [selectedSize, setSelectedSize] = useState('M');
- 
   const [showPaymentOptions, setShowPaymentOptions] = useState(false);
   const [discountEndTime] = useState(Date.now() + 24 * 60 * 60 * 1000); // 24 hours from now
   const [timeLeft, setTimeLeft] = useState(null);
@@ -49,7 +47,7 @@ const ProductDetail = () => {
         setProduct(foundProduct);
         setSelectedImage(0);
       } else {
-        setProduct(null); // Handle invalid product ID
+        setProduct(null);
       }
     }
   }, [products, id]);
@@ -59,9 +57,7 @@ const ProductDetail = () => {
       const timer = setInterval(() => {
         const timeRemaining = Math.max(0, discountEndTime - Date.now());
         setTimeLeft(timeRemaining);
-        if (timeRemaining <= 0) {
-          clearInterval(timer);
-        }
+        if (timeRemaining <= 0) clearInterval(timer);
       }, 1000);
       return () => clearInterval(timer);
     }
@@ -87,11 +83,12 @@ const ProductDetail = () => {
 
   const handleBuyNow = (method) => {
     if (!product) return;
-    dispatch(addToCart({ ...product, quantity }));
+    dispatch(addToCart({ ...product, quantity })); // Add to cart first
     toast.success(`Proceeding to ${method === 'cod' ? 'Cash on Delivery' : method} Checkout`, {
       style: { background: '#10B981', color: '#fff' },
     });
-    window.location.href = `/checkout?method=${method}&productId=${product._id}&quantity=${quantity}`;
+    // Redirect to checkout with method parameter
+    router.push(`/checkout?method=${method}`);
     setShowPaymentOptions(false);
   };
 
@@ -112,7 +109,6 @@ const ProductDetail = () => {
     toast.info('Link copied to clipboard!', { style: { background: '#3B82F6', color: '#fff' } });
   };
 
-
   const relatedProducts = product
     ? products.filter((p) => p.category === product.category && p._id !== product._id).slice(0, 4)
     : [];
@@ -131,13 +127,11 @@ const ProductDetail = () => {
   return (
     <div className="min-h-screen mt-10 bg-[#f5fafb] dark:from-gray-800 dark:to-gray-900 py-12 px-4 sm:px-6 md:px-8">
       <div className="max-w-5xl mx-auto">
-        {/* Product Header */}
         <section className="mb-8">
           <Link href="/" className="text-[#23565b] hover:text-blue-600 dark:text-blue-400 dark:hover:text-blue-300 flex items-center mb-4">
             <ChevronLeft size={20} /> Back to Products
           </Link>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-            {/* Image Carousel */}
             <div className="relative">
               <img
                 src={product.media[selectedImage] || '/placeholder.png'}
@@ -174,7 +168,6 @@ const ProductDetail = () => {
                 </Button>
               </div>
             </div>
-            {/* Product Details */}
             <div className="animate-fade-in">
               <h1 className="text-3xl font-serif text-gray-800 dark:text-gray-100 mb-4">{product.title}</h1>
               <div className="flex items-center gap-2 mb-4">
@@ -202,7 +195,7 @@ const ProductDetail = () => {
                       onClick={() => setSelectedSize(size)}
                       className={`w-full sm:w-12 h-12 rounded-full transition-transform hover:scale-105 ${
                         selectedSize === size
-                          ? 'bg-[#9bced3]  hover:bg-blue-600 text-white'
+                          ? 'bg-[#9bced3] hover:bg-blue-600 text-white'
                           : 'border-gray-300 dark:border-gray-600 hover:bg-blue-100 dark:hover:bg-blue-900'
                       } sm:h-12`}
                     >
@@ -231,14 +224,14 @@ const ProductDetail = () => {
               <div className="flex gap-4 mb-4 flex-col sm:flex-row">
                 <Button
                   onClick={handleAddToCart}
-                  className="w-full sm:flex-1 bg-[#9bced3]  text-white font-semibold rounded-full shadow-md hover:shadow-lg transition-all duration-300 p-2 sm:p-3 text-sm sm:text-base"
+                  className="w-full sm:flex-1 bg-[#9bced3] text-white font-semibold rounded-full shadow-md hover:shadow-lg transition-all duration-300 p-2 sm:p-3 text-sm sm:text-base"
                 >
                   <ShoppingCart size={18} className="mr-2" /> Add to Cart - ${discountedPrice.toFixed(2)}
                 </Button>
                 <div className="relative w-full sm:flex-1">
                   <Button
                     onClick={() => setShowPaymentOptions(!showPaymentOptions)}
-                    className="w-full text-white bg-[#9bced3]  font-semibold rounded-full shadow-md hover:shadow-lg transition-all duration-300 p-2 sm:p-3 text-sm sm:text-base"
+                    className="w-full text-white bg-[#9bced3] font-semibold rounded-full shadow-md hover:shadow-lg transition-all duration-300 p-2 sm:p-3 text-sm sm:text-base"
                   >
                     <span>Buy Now - ${discountedPrice.toFixed(2)}</span>
                   </Button>
@@ -293,7 +286,6 @@ const ProductDetail = () => {
           </div>
         </section>
 
-        {/* Description */}
         <section className="mb-12 animate-fade-in">
           <h2 className="text-2xl font-serif text-gray-800 dark:text-gray-100 mb-4">Product Description</h2>
           <div
@@ -302,7 +294,6 @@ const ProductDetail = () => {
           />
         </section>
 
-        {/* Frequently Bought Together */}
         {relatedProducts.length > 0 && (
           <section className="mb-12 animate-fade-in">
             <h2 className="text-2xl font-serif text-gray-800 dark:text-gray-100 mb-4">Frequently Bought Together</h2>
@@ -335,10 +326,8 @@ const ProductDetail = () => {
           </section>
         )}
 
-        {/* Reviews Section */}
         <Reviews />
 
-        {/* Cart Sidebar */}
         <CartSidebar products={products} />
       </div>
     </div>

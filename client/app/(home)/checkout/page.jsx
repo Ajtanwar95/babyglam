@@ -13,7 +13,7 @@ import { clearCart } from '@/app/redux/slices/cartSlice';
 export default function Checkout() {
   const router = useRouter();
   const dispatch = useDispatch();
-  const { items } = useSelector((state) => state.cart);
+  const cart = useSelector((state) => state.cart);
   const [address, setAddress] = useState({
     name: '',
     email: '',
@@ -32,12 +32,14 @@ export default function Checkout() {
       const script = document.createElement('script');
       script.src = 'https://checkout.razorpay.com/v1/checkout.js';
       script.async = true;
+      script.onload = () => console.log('Razorpay script loaded');
+      script.onerror = () => console.error('Failed to load Razorpay script');
       document.body.appendChild(script);
     };
     loadRazorpayScript();
   }, []);
 
-  const calculateTotal = () => items.reduce((sum, item) => sum + item.price * item.quantity, 0);
+  const calculateTotal = () => cart.items.reduce((sum, item) => sum + item.price * item.quantity, 0);
 
   const handlePayment = async () => {
     if (!address.name || !address.email || !address.phone || !address.line1) {
@@ -47,12 +49,15 @@ export default function Checkout() {
 
     setLoading(true);
     try {
-      // Create order on server
+      console.log('Creating order with amount:', calculateTotal());
       const response = await axios.post(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v2/payments/create-order`, {
         amount: calculateTotal(),
+      }, {
+        headers: { 'Content-Type': 'application/json' },
       });
       const { id: order_id } = response.data;
       setOrderId(order_id);
+      console.log('Order created:', order_id);
 
       const options = {
         key: process.env.NEXT_PUBLIC_RAZORPAY_KEY_ID,
@@ -63,7 +68,6 @@ export default function Checkout() {
         order_id: order_id,
         handler: async (response) => {
           const { razorpay_payment_id, razorpay_order_id, razorpay_signature } = response;
-          // Verify payment on server
           const verifyResponse = await axios.post(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v2/payments/verify-payment`, {
             razorpay_order_id,
             razorpay_payment_id,
@@ -71,9 +75,8 @@ export default function Checkout() {
           });
 
           if (verifyResponse.data.success) {
-            // Save order to DB
             await axios.post(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v2/orders`, {
-              items,
+              items: cart.items,
               total: calculateTotal(),
               address,
               paymentId: razorpay_payment_id,
@@ -91,15 +94,18 @@ export default function Checkout() {
           contact: address.phone,
         },
         theme: {
-          color: '#F472B6', // Pink theme to match BabyGlam
+          color: '#F472B6',
         },
       };
 
+      if (!window.Razorpay) {
+        throw new Error('Razorpay SDK not loaded');
+      }
       const rzp = new window.Razorpay(options);
       rzp.open();
     } catch (error) {
-      console.error('Payment error:', error);
-      toast.error('Payment Failed', { style: { background: '#EF4444', color: '#fff' } });
+      console.error('Payment error:', error.response ? error.response.data : error.message);
+      toast.error(`Payment Failed: ${error.response ? error.response.data.error : error.message}`, { style: { background: '#EF4444', color: '#fff' } });
     }
     setLoading(false);
   };
@@ -115,9 +121,9 @@ export default function Checkout() {
             <CardTitle>Order Summary</CardTitle>
           </CardHeader>
           <CardContent>
-            {items.map((item) => (
+            {cart.items.map((item) => (
               <div key={item._id} className="flex justify-between mb-2">
-                <span>{item.title}</span>
+                <span>{item.title} (x{item.quantity})</span>
                 <span>₹{(item.price * item.quantity).toFixed(2)}</span>
               </div>
             ))}
@@ -167,7 +173,7 @@ export default function Checkout() {
         <div className="mt-8">
           <Button
             onClick={handlePayment}
-            disabled={loading || items.length === 0}
+            disabled={loading || cart.items.length === 0}
             className="w-full bg-gradient-to-r from-blue-500 to-pink-500 text-white font-semibold py-3 rounded-lg hover:from-blue-600 hover:to-pink-600 transition-all duration-300"
           >
             {loading ? 'Processing...' : 'Pay Now with Razorpay'}
