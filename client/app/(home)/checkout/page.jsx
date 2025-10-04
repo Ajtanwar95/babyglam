@@ -50,7 +50,7 @@ export default function Checkout() {
     setLoading(true);
     try {
       console.log('Creating order with amount:', calculateTotal());
-      const response = await axios.post(`${API_BASE_URL}/api/v2/payments/create-order`, {
+      const response = await axios.post(`${API_BASE_URL}/payments/create-order`, {
         amount: calculateTotal(),
       }, {
         headers: { 'Content-Type': 'application/json' },
