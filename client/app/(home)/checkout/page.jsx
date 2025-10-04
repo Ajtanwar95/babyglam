@@ -8,7 +8,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { toast } from 'react-toastify';
 import axios from 'axios';
-import { clearCart } from '@/app/redux/slices/cartSlice';
+import { clearCart, setLastOrder } from '@/app/redux/slices/cartSlice'; // Add setLastOrder
 import API_BASE_URL  from '../../config/apiConfig';
 export default function Checkout() {
   const router = useRouter();
@@ -37,6 +37,7 @@ export default function Checkout() {
       document.body.appendChild(script);
     };
     loadRazorpayScript();
+    console.log('Razorpay Key:', process.env.NEXT_PUBLIC_RAZORPAY_KEY_ID);
   }, []);
 
   const calculateTotal = () => cart.items.reduce((sum, item) => sum + item.price * item.quantity, 0);
@@ -60,8 +61,8 @@ export default function Checkout() {
       console.log('Order created:', order_id);
 
       const options = {
-        key: process.env.NEXT_PUBLIC_RAZORPAY_KEY_ID,
-        amount: calculateTotal() * 100, // Amount in paise
+        key: "rzp_test_RPJb9K9gba5TEv",
+        amount: calculateTotal() * 100,
         currency: 'INR',
         name: 'BabyGlam',
         description: 'Baby Products Purchase',
@@ -75,6 +76,13 @@ export default function Checkout() {
           });
 
           if (verifyResponse.data.success) {
+            // Save order details before clearing cart
+            dispatch(setLastOrder({
+              items: cart.items,
+              total: calculateTotal(),
+              address,
+              paymentId: razorpay_payment_id,
+            }));
             await axios.post(`${API_BASE_URL}/orders`, {
               items: cart.items,
               total: calculateTotal(),
@@ -97,6 +105,7 @@ export default function Checkout() {
           color: '#F472B6',
         },
       };
+      console.log('Razorpay Options:', options);
 
       if (!window.Razorpay) {
         throw new Error('Razorpay SDK not loaded');

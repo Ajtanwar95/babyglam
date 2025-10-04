@@ -5,9 +5,9 @@ const loadCartFromStorage = () => {
     const savedCart = localStorage.getItem('cart');
     return savedCart
       ? JSON.parse(savedCart)
-      : { items: [], isOpen: false, showOfferPopup: false, offerExpiry: null, wishlist: [] };
+      : { items: [], isOpen: false, showOfferPopup: false, offerExpiry: null, wishlist: [], lastOrder: null };
   }
-  return { items: [], isOpen: false, showOfferPopup: false, offerExpiry: null, wishlist: [] };
+  return { items: [], isOpen: false, showOfferPopup: false, offerExpiry: null, wishlist: [], lastOrder: null };
 };
 
 const initialState = loadCartFromStorage();
@@ -45,7 +45,7 @@ const cartSlice = createSlice({
       state.isOpen = !state.isOpen;
       if (!state.isOpen && (state.items.length === 0 || state.items.reduce((sum, item) => sum + item.price * item.quantity, 0) < 30)) {
         state.showOfferPopup = true;
-        state.offerExpiry = Date.now() + 10 * 60 * 1000; // 10 minutes
+        state.offerExpiry = Date.now() + 10 * 60 * 1000;
       } else {
         state.showOfferPopup = false;
       }
@@ -72,6 +72,10 @@ const cartSlice = createSlice({
       state.wishlist = state.wishlist.filter((item) => item._id !== action.payload);
       localStorage.setItem('cart', JSON.stringify(state));
     },
+    setLastOrder: (state, action) => {
+      state.lastOrder = action.payload;
+      localStorage.setItem('cart', JSON.stringify(state));
+    },
   },
 });
 
@@ -84,5 +88,6 @@ export const {
   dismissOfferPopup,
   addToWishlist,
   removeFromWishlist,
+  setLastOrder,
 } = cartSlice.actions;
 export default cartSlice.reducer;
