@@ -6,6 +6,8 @@ const userRoutes = require('./routes/userRoutes');
 const dashboardRoutes = require('./routes/dashboardRoutes');
 const productRoutes = require('./routes/productRoutes');
 const reviewRoutes = require('./routes/reviewRoutes');
+const paymentRoutes = require('./routes/paymentRoutes');
+const orderRoutes = require('./routes/orderRoutes');
 
 dotenv.config();
 
@@ -15,13 +17,15 @@ const port = process.env.PORT || 5000;
 // Middleware
 app.use(cors());
 app.use(express.json());
+app.use(express.raw({ type: 'application/json' }));
 
 // Routes
 app.use('/api/v2', userRoutes);
 app.use('/api/v2/dashboard', dashboardRoutes);
 app.use('/api/v2/products', productRoutes);
 app.use('/api/v2/reviews', reviewRoutes);
-
+app.use('/api/v2/payments', paymentRoutes);
+app.use('/api/v2/orders', orderRoutes);
 app.get('/', (req, res) => res.send('API is running'));
 
 // DB Connection

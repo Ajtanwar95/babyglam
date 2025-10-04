@@ -28,7 +28,7 @@ export const metadata = {
     type: "website",
   },
 };
-
+<script src="https://checkout.razorpay.com/v1/checkout.js" async></script>
 export default function RootLayout({ children }) {
   return (
     <html lang="en">
