@@ -15,7 +15,7 @@ export default function OrderConfirmation() {
       <div className="max-w-4xl mx-auto text-center">
         <Card className="bg-white dark:bg-gray-800 shadow-lg">
           <CardHeader>
-            <CardTitle className="text-3xl font-serif text-green-600 dark:text-green-400 flex items-center justify-center">
+            <CardTitle className="text-3xl font-serif text-green-600 dark:text-green-400 flex items-center justify-center mt-5">
               <CheckCircle size={40} className="mr-2" /> Order Confirmed!
             </CardTitle>
           </CardHeader>

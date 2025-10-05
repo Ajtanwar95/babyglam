@@ -8,8 +8,9 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { toast } from 'react-toastify';
 import axios from 'axios';
-import { clearCart, setLastOrder } from '@/app/redux/slices/cartSlice'; // Add setLastOrder
-import API_BASE_URL  from '../../config/apiConfig';
+import { clearCart, setLastOrder } from '@/app/redux/slices/cartSlice';
+import API_BASE_URL from '../../config/apiConfig';
+
 export default function Checkout() {
   const router = useRouter();
   const dispatch = useDispatch();
@@ -56,17 +57,18 @@ export default function Checkout() {
       }, {
         headers: { 'Content-Type': 'application/json' },
       });
-      const { id: order_id } = response.data;
-      setOrderId(order_id);
-      console.log('Order created:', order_id);
+      const { id: razorpayOrderId } = response.data;
+      setOrderId(razorpayOrderId);
+      console.log('Order created:', razorpayOrderId);
 
       const options = {
-        key: "rzp_test_RPJb9K9gba5TEv",
+        // key: "rzp_test_RPJb9K9gba5TEv",
+        key: "rzp_live_RPJI5XFUwcYWtx",
         amount: calculateTotal() * 100,
         currency: 'INR',
         name: 'BabyGlam',
         description: 'Baby Products Purchase',
-        order_id: order_id,
+        order_id: razorpayOrderId,
         handler: async (response) => {
           const { razorpay_payment_id, razorpay_order_id, razorpay_signature } = response;
           const verifyResponse = await axios.post(`${API_BASE_URL}/payments/verify-payment`, {
@@ -82,12 +84,14 @@ export default function Checkout() {
               total: calculateTotal(),
               address,
               paymentId: razorpay_payment_id,
+              orderId: razorpay_order_id, // Pass Razorpay orderId
             }));
             await axios.post(`${API_BASE_URL}/orders`, {
               items: cart.items,
               total: calculateTotal(),
               address,
               paymentId: razorpay_payment_id,
+              orderId: razorpay_order_id, // Pass to backend
             });
             dispatch(clearCart());
             toast.success('Payment Successful!', { style: { background: '#10B981', color: '#fff' } });
