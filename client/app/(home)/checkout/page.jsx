@@ -63,7 +63,7 @@ export default function Checkout() {
 
       const options = {
         // key: "rzp_test_RPJb9K9gba5TEv",
-        key: "rzp_live_RPJI5XFUwcYWtx",
+        key: "rzp_live_RPlyXBNMF4FncS",
         amount: calculateTotal() * 100,
         currency: 'INR',
         name: 'BabyGlam',
