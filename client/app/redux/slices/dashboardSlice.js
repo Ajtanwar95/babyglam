@@ -9,7 +9,9 @@ export const fetchMetrics = createAsyncThunk('dashboard/fetchMetrics', async () 
 
 export const fetchRecentOrders = createAsyncThunk('dashboard/fetchRecentOrders', async () => {
   const response = await axios.get(`${API_BASE_URL}/dashboard/recent-orders`);
+  console.log(response.data);
   return response.data;
+  
 });
 
 export const fetchSalesData = createAsyncThunk('dashboard/fetchSalesData', async () => {

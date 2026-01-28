@@ -119,56 +119,96 @@ const Dashboard = () => {
       </div>
 
       {/* Recent Orders Table */}
-      <Card className="bg-white dark:bg-gray-800 shadow-lg">
-        <CardHeader>
-          <CardTitle className="text-base sm:text-lg font-semibold text-gray-700 dark:text-gray-200">Recent Orders</CardTitle>
-        </CardHeader>
-        <CardContent>
-          <Table>
-            <TableHeader>
-              <TableRow>
-                <TableHead className="text-xs sm:text-sm">Order ID</TableHead>
-                <TableHead className="text-xs sm:text-sm">Customer</TableHead>
-                <TableHead className="text-xs sm:text-sm">Date</TableHead>
-                <TableHead className="text-xs sm:text-sm">Amount</TableHead>
-                <TableHead className="text-xs sm:text-sm">Status</TableHead>
-                <TableHead className="text-xs sm:text-sm">Actions</TableHead>
-              </TableRow>
-            </TableHeader>
-            <TableBody>
-              {recentOrders.length === 0 && !loading && (
-                <TableRow>
-                  <TableCell colSpan={6} className="text-center text-gray-500 dark:text-gray-400">
-                    No orders found
-                  </TableCell>
-                </TableRow>
-              )}
-              {recentOrders.map((order) => (
-                <TableRow key={order._id}>
-                  <TableCell className="text-xs sm:text-sm">{order.orderId}</TableCell>
-                  <TableCell className="text-xs sm:text-sm">{order.customerName}</TableCell>
-                  <TableCell className="text-xs sm:text-sm">{new Date(order.date).toLocaleDateString()}</TableCell>
-                  <TableCell className="text-xs sm:text-sm">${order.amount.toLocaleString()}</TableCell>
-                  <TableCell className="text-xs sm:text-sm">
-                    <span
-                      className={`px-2 py-1 rounded-full text-xs ${
-                        order.status === 'Delivered' ? 'bg-green-100 text-green-800' :
-                        order.status === 'Pending' ? 'bg-yellow-100 text-yellow-800' :
-                        'bg-red-100 text-red-800'
-                      }`}
+     <Card className="bg-white dark:bg-gray-800 shadow-lg">
+  <CardHeader>
+    <CardTitle className="text-base sm:text-lg font-semibold text-gray-700 dark:text-gray-200">
+      Recent Orders
+    </CardTitle>
+  </CardHeader>
+  <CardContent>
+    <div className="overflow-x-auto">
+      <Table>
+        <TableHeader>
+          <TableRow>
+            <TableHead className="text-xs sm:text-sm">Order ID</TableHead>
+            <TableHead className="text-xs sm:text-sm">Customer</TableHead>
+            <TableHead className="text-xs sm:text-sm">Date</TableHead>
+            <TableHead className="text-xs sm:text-sm">Amount</TableHead>
+            <TableHead className="text-xs sm:text-sm">Status</TableHead>
+            <TableHead className="text-xs sm:text-sm text-right">Actions</TableHead>
+          </TableRow>
+        </TableHeader>
+        <TableBody>
+          {recentOrders.length === 0 && !loading ? (
+            <TableRow>
+              <TableCell colSpan={6} className="text-center py-8 text-gray-500 dark:text-gray-400">
+                No recent orders found
+              </TableCell>
+            </TableRow>
+          ) : (
+            recentOrders.map((order) => (
+              <TableRow key={order._id || order.orderId} className="hover:bg-gray-50 dark:hover:bg-gray-700/50">
+                <TableCell className="font-medium text-xs sm:text-sm">
+                  {order.orderId || order._id?.slice(-8)}
+                </TableCell>
+                <TableCell className="text-xs sm:text-sm">
+                  {order.customerName || order.address?.name || '—'}
+                </TableCell>
+                <TableCell className="text-xs sm:text-sm whitespace-nowrap">
+                  {order.createdAt || order.date
+                    ? new Date(order.createdAt || order.date).toLocaleString('en-IN', {
+                        day: '2-digit',
+                        month: 'short',
+                        year: 'numeric',
+                        hour: '2-digit',
+                        minute: '2-digit',
+                      })
+                    : '—'}
+                </TableCell>
+                <TableCell className="text-xs sm:text-sm font-medium">
+                  ₹{(order.total || order.amount || 0).toLocaleString('en-IN')}
+                </TableCell>
+                <TableCell>
+                  <span
+                    className={`inline-flex px-2.5 py-1 text-xs font-medium rounded-full ${
+                      order.status === 'Delivered' ? 'bg-green-100 text-green-800 border border-green-200' :
+                      order.status === 'Shipped'   ? 'bg-blue-100 text-blue-800 border border-blue-200' :
+                      order.status === 'Processing'? 'bg-purple-100 text-purple-800 border border-purple-200' :
+                      order.status === 'Pending'   ? 'bg-yellow-100 text-yellow-800 border border-yellow-200' :
+                      order.status === 'Cancelled' ? 'bg-red-100 text-red-800 border border-red-200' :
+                      'bg-gray-100 text-gray-800 border border-gray-200'
+                    }`}
+                  >
+                    {order.status || 'Unknown'}
+                  </span>
+                </TableCell>
+                <TableCell className="text-right text-xs sm:text-sm space-x-2">
+                  {/* View Details */}
+                  <a
+                    href={`/admin/orders/${order.orderId || order._id}`}
+                    className="text-blue-600 hover:text-blue-800 hover:underline"
+                  >
+                    View
+                  </a>
+
+                  {/* Quick status change (optional - requires backend endpoint) */}
+                  {order.status !== 'Delivered' && order.status !== 'Cancelled' && (
+                    <button
+                      onClick={() => handleQuickStatusChange(order._id || order.orderId, 'Shipped')}
+                      className="text-indigo-600 hover:text-indigo-800 hover:underline"
                     >
-                      {order.status}
-                    </span>
-                  </TableCell>
-                  <TableCell className="text-xs sm:text-sm">
-                    <a href={`/admin/orders/${order.orderId}`} className="text-blue-500 hover:underline">View</a>
-                  </TableCell>
-                </TableRow>
-              ))}
-            </TableBody>
-          </Table>
-        </CardContent>
-      </Card>
+                      Mark Shipped
+                    </button>
+                  )}
+                </TableCell>
+              </TableRow>
+            ))
+          )}
+        </TableBody>
+      </Table>
+    </div>
+  </CardContent>
+</Card>
     </div>
   );
 };
