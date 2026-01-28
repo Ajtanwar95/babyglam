@@ -28,14 +28,27 @@ router.get('/metrics', async (req, res) => {
 });
 
 // Recent Orders
-router.get('/orders', async (req, res) => {
+// Recent Orders – return more useful fields
+router.get('/recent-orders', async (req, res) => {
   try {
     const orders = await Order.find()
-      .sort({ date: -1 })
+      .sort({ createdAt: -1 })         
       .limit(5)
-      .select('orderId customerName amount date status');
-    res.json(orders);
+      .select('orderId total address.name createdAt status paymentId');
+
+    const formatted = orders.map(order => ({
+      orderId:    order.orderId,
+      customerName: order.address?.name || 'Guest',
+      date:       order.createdAt,
+      amount:     order.total,
+      status:     order.status,
+      _id:        order._id,
+      paymentId:  order.paymentId,
+    }));
+
+    res.json(formatted);
   } catch (error) {
+    console.error(error);
     res.status(500).json({ error: 'Server error' });
   }
 });
