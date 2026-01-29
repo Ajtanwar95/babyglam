@@ -86,7 +86,7 @@ export default function Sliderbanner() {
         onSlideChange={(swiper) => {
           setActiveSlide(swiper.realIndex);
           setShowContentMobile({});
-          setActiveMobile({}); // reset active state on slide change
+          setActiveMobile({}); 
         }}
         className="w-full aspect-[13/9] sm:aspect-[16/9] md:aspect-[16/7] lg:aspect-[16/6] xl:aspect-[16/5] 2xl:aspect-[16/4.5]"
       >
