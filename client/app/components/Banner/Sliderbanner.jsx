@@ -69,7 +69,7 @@ export default function Sliderbanner() {
         effect="fade"
         fadeEffect={{ crossFade: true }}
         autoplay={{
-          delay: 5000,
+          delay: 2000,
           disableOnInteraction: false,
           pauseOnMouseEnter: true,
         }}
@@ -184,7 +184,7 @@ export default function Sliderbanner() {
           /* bottom: 14px !important; */
         }
         .swiper-pagination-bullet {
-          background: rgba(255,255,255,0.9);
+          background: #59abab;
           opacity: 0.7;
           width: 8px;
           height: 8px;
@@ -192,7 +192,7 @@ export default function Sliderbanner() {
           transition: all 0.3s ease;
         }
         .swiper-pagination-bullet-active {
-          background: #ec4899;
+          background: #59abab;
           opacity: 1;
           width: 28px;
           border-radius: 9999px;
