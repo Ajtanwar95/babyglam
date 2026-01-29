@@ -3,7 +3,7 @@ import Image from "next/image";
 
 export default function Banner() {
   return (
-    <section className="relative mt-18 w-full h-[150px] md:h-[500px] ">
+    <section className="relative  w-full h-[150px] md:h-[500px] ">
       {/* Banner Background */}
       <Image
         src="/assets/Baby Glam.png"
