@@ -103,7 +103,6 @@ export default function Sliderbanner() {
                       ...prev,
                       [index]: !prev[index],
                     }));
-                    // Optionally toggle content too – or keep separate
                     setShowContentMobile((prev) => ({
                       ...prev,
                       [index]: !prev[index],
