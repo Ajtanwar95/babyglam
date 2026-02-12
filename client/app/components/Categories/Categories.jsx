@@ -20,7 +20,7 @@ export default function Categories() {
               href={cat.link}
               className="flex flex-col items-center p-6 bg-white shadow-lg rounded-2xl hover:shadow-xl transition"
             >
-              <div className=" text-3xl sm:text-5xl text-[#59abab] mb-4">{cat.icon}</div>
+              <div className=" text-3xl   sm:text-5xl text-[#59abab] mb-4">{cat.icon}</div>
               <h3 className=" text-xs sm:text-lg font-semibold">{cat.name}</h3>
             </a>
           ))}
