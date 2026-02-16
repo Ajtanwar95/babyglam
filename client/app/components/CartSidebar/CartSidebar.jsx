@@ -82,18 +82,18 @@ const CartSidebar = ({ products }) => {
     <>
       {/* Cart Sidebar */}
       <div
-        className={`fixed inset-y-0 right-0 w-full sm:w-[400px] bg-gradient-to-b from-blue-50 to-pink-50 dark:from-gray-800 dark:to-gray-900 shadow-2xl transform transition-transform duration-500 ease-out ${
+        className={`fixed inset-y-0 right-0 w-full sm:w-[400px] bg-[#9bced3] dark:from-gray-800 dark:to-gray-900 shadow-2xl transform transition-transform duration-500 ease-out ${
           isOpen ? 'translate-x-0 scale-100' : 'translate-x-full scale-95'
         } z-50`}
       >
         <div className="flex flex-col h-full">
-          <CardHeader className="border-b border-gray-200 dark:border-gray-700 bg-gradient-to-r from-blue-100 to-pink-100 dark:from-gray-700 dark:to-gray-800">
+          <CardHeader className="border-b mt-4 border-gray-200 dark:border-gray-700 bg-[#9bced3] dark:from-gray-700 dark:to-gray-800">
             <div className="flex justify-between items-center">
               <CardTitle className="text-2xl font-serif text-gray-800 dark:text-gray-100 tracking-wide">Your BabyGlam Cart</CardTitle>
               <Button
                 variant="ghost"
                 onClick={() => dispatch(toggleCart())}
-                className="text-gray-600 dark:text-gray-300 hover:text-pink-500 dark:hover:text-pink-400 transition-colors"
+                className="text-gray-600 dark:text-gray-300 hover:text-[#9bced3] dark:hover:text-pink-400  bg-[#7aafb4]  transition-colors"
               >
                 <X size={28} />
               </Button>
@@ -106,7 +106,7 @@ const CartSidebar = ({ products }) => {
                 <p className="text-lg font-medium">Your cart is empty. Fill it with adorable baby items!</p>
                 <Button
                   asChild
-                  className="mt-4 bg-gradient-to-r from-blue-500 to-pink-500 hover:from-blue-600 hover:to-pink-600 text-white transform hover:scale-105 transition-transform"
+                  className="mt-4 bg-[#5ca4aa] hover:bg-[#8ba0a1] text-white transform hover:scale-105 transition-transform"
                 >
                   <Link href="/">Shop Now</Link>
                 </Button>
@@ -151,7 +151,7 @@ const CartSidebar = ({ products }) => {
                             dispatch(removeFromCart(item._id));
                             toast.info('Item removed from cart.', { style: { background: '#3B82F6', color: '#fff' } });
                           }}
-                          className="bg-red-500 hover:bg-red-600 rounded-full w-10 h-10 transform hover:scale-110 transition-transform"
+                          className="bg-[#468288] hover:bg-red-600 rounded-full w-10 h-10 transform hover:scale-110 transition-transform"
                         >
                           <Trash2 size={16} />
                         </Button>
@@ -179,7 +179,7 @@ const CartSidebar = ({ products }) => {
                     <p className="text-sm font-medium text-gray-700 dark:text-gray-300">Free Shipping Progress</p>
                     <div className="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-3 mt-2 overflow-hidden">
                       <div
-                        className="bg-gradient-to-r from-blue-500 to-blue-700 h-3 rounded-full transition-all duration-500"
+                        className="bg-[#4882a3] h-3 rounded-full transition-all duration-500"
                         style={{ width: `${freeShippingProgress}%` }}
                       ></div>
                     </div>
@@ -193,7 +193,7 @@ const CartSidebar = ({ products }) => {
                     <p className="text-sm font-medium text-gray-700 dark:text-gray-300">Free Gift Progress</p>
                     <div className="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-3 mt-2 overflow-hidden">
                       <div
-                        className="bg-gradient-to-r from-pink-500 to-pink-700 h-3 rounded-full transition-all duration-500"
+                        className="bg-[#29bac7] h-3 rounded-full transition-all duration-500"
                         style={{ width: `${freeGiftProgress}%` }}
                       ></div>
                     </div>
@@ -240,17 +240,17 @@ const CartSidebar = ({ products }) => {
             )}
           </CardContent>
           {items.length > 0 && (
-            <div className="p-6 border-t border-gray-200 dark:border-gray-700 bg-gradient-to-t from-blue-50 to-white dark:from-gray-800 dark:to-gray-900">
+            <div className="p-6 border-t border-gray-200 dark:border-gray-700 bg-[] to-white dark:from-gray-800 dark:to-gray-900">
               <Button
                 onClick={() => handleCheckout('online')}
-                className="w-full mb-3 bg-gradient-to-r from-green-500 to-green-700 hover:from-green-600 hover:to-green-800 text-white transform hover:scale-105 transition-transform"
+                className="w-full mb-3 bg-[#4e969c] hover:from-green-600 hover:to-green-800 text-white transform hover:scale-105 transition-transform"
               >
                 Checkout Online
               </Button>
               <Button
                 onClick={() => handleCheckout('cod')}
                 variant="outline"
-                className="w-full border-2 border-blue-500 text-blue-500 hover:bg-blue-50 dark:border-blue-400 dark:text-blue-400 dark:hover:bg-blue-900 transform hover:scale-105 transition-transform"
+                className="w-full border-2 border-[#4e969c] text-blue-500 hover:bg-blue-50 dark:border-blue-400 dark:text-blue-400 dark:hover:bg-blue-900 transform hover:scale-105 transition-transform"
               >
                 <Package size={18} className="mr-2" /> Cash on Delivery
               </Button>
@@ -261,10 +261,10 @@ const CartSidebar = ({ products }) => {
 
       {/* Offer Popup */}
       {showOfferPopup && (
-        <div className="fixed inset-0 bg-black bg-opacity-60 flex items-center justify-center z-50">
-          <Card className="w-full max-w-md mx-4 bg-gradient-to-br from-white to-blue-50 dark:from-gray-800 dark:to-gray-900 shadow-2xl rounded-2xl overflow-hidden animate-popup">
-            <CardHeader className="bg-gradient-to-r from-blue-500 to-pink-500 text-white p-6">
-              <CardTitle className="text-2xl font-serif tracking-wide">Exclusive Offer!</CardTitle>
+        <div className="fixed inset-0 bg-[#b3cece] bg-opacity-60 flex items-center justify-center z-50">
+          <Card className="w-full max-w-md mx-4  dark:from-gray-800 dark:to-gray-900 shadow-2xl rounded-2xl overflow-hidden animate-popup">
+            <CardHeader className="bg-[#599191] text-white p-6 justify-center items-center">
+              <CardTitle className="text-2xl font-serif  tracking-wide">Exclusive Offer!</CardTitle>
             </CardHeader>
             <CardContent className="p-6">
               <p className="text-gray-700 dark:text-gray-200 mb-4 text-lg font-medium">
@@ -298,7 +298,7 @@ const CartSidebar = ({ products }) => {
                                 style: { background: '#10B981', color: '#fff' },
                               });
                             }}
-                            className="mt-1 w-full bg-blue-500 hover:bg-blue-600 text-xs"
+                            className="mt-1 w-full bg-[#599191] text-xs"
                           >
                             Add
                           </Button>
@@ -310,7 +310,7 @@ const CartSidebar = ({ products }) => {
               )}
               <Button
                 asChild
-                className="w-full bg-gradient-to-r from-blue-500 to-pink-500 hover:from-blue-600 hover:to-pink-600 text-white transform hover:scale-105 transition-transform"
+                className="w-full bg-[#599191] text-white transform hover:scale-105 transition-transform"
                 onClick={() => dispatch(dismissOfferPopup())}
               >
                 <Link href="/">Shop Now</Link>
@@ -318,7 +318,7 @@ const CartSidebar = ({ products }) => {
               <Button
                 variant="ghost"
                 onClick={() => dispatch(dismissOfferPopup())}
-                className="mt-3 w-full text-gray-500 dark:text-gray-400 hover:text-pink-500 dark:hover:text-pink-400 transition-colors"
+                className="mt-3 w-full text-gray-500 dark:text-gray-400 hover:text-[#7a9797] dark:hover:text-[#7a9797] transition-colors"
               >
                 No Thanks
               </Button>
