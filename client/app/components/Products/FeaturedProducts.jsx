@@ -111,7 +111,7 @@ const FeaturedProducts = () => {
             No products available
           </div>
         ) : (
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 md:gap-8">
+          <div className=" grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 md:gap-8">
             {products.map((product) => {
               const discountedPrice = getDiscountedPrice(product.price);
               const discountPercent = 20;
@@ -120,11 +120,11 @@ const FeaturedProducts = () => {
                 <Link
                   key={product._id}
                   href={`/products/${product._id}`}
-                  className="group block bg-white dark:bg-gray-800 rounded-2xl overflow-hidden shadow-md hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-1 border border-gray-100 dark:border-gray-700"
+                  className="group  block bg-white dark:bg-gray-800 rounded-2xl overflow-hidden shadow-md hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-1 border border-gray-100 dark:border-gray-700"
                 >
                   {/* Image + Discount Badge */}
                   <div className="relative">
-                    <div className="aspect-[4/5] overflow-hidden bg-gray-100 dark:bg-gray-700">
+                    <div className=" aspect-[4/5] overflow-hidden bg-gray-100 dark:bg-gray-700">
                       <img
                         src={product.media?.[0] || "/placeholder.png"}
                         alt={product.title}
@@ -139,17 +139,17 @@ const FeaturedProducts = () => {
                   </div>
 
                   {/* Content */}
-                  <div className="p-5">
-                    <h3 className="text-lg font-semibold text-gray-900 dark:text-white line-clamp-2 min-h-[3rem]">
+                  <div className="p-2 sm:p-5">
+                    <h3 className="text-sm sm:text-lg font-semibold text-gray-900 dark:text-white line-clamp-2 sm:min-h-[3rem]">
                       {product.title}
                     </h3>
 
                     {/* Pricing */}
-                    <div className="mt-3 flex items-center gap-3">
-                      <span className="text-2xl font-bold text-[#9bced3]">
+                    <div className="mt-3 flex items-center gap-1  sm:gap-3">
+                      <span className=" text-lg sm:text-2xl font-bold text-[#9bced3]">
                         ₹{discountedPrice}
                       </span>
-                      <span className="text-lg text-gray-500 dark:text-gray-400 line-through">
+                      <span className="text-xs sm:text-xl text-gray-500 dark:text-gray-400 line-through">
                         ₹{product.price.toFixed(2)}
                       </span>
                     </div>
@@ -163,16 +163,16 @@ const FeaturedProducts = () => {
                   </div>
 
                   {/* Buttons */}
-                  <div className="px-5 pb-5 flex gap-3">
+                  <div className=" px-1 pb-1 sm:px-5 sm:pb-5 grid grid-cols-1 gap-2 sm:grid-cols-2">
                     <Button
                       onClick={(e) => {
                         e.preventDefault();
                         handleAddToCart(product);
                       }}
-                      className="flex-1 bg-[#9bced3] hover:bg-[#8ab8c0] text-white font-medium rounded-xl transition-all duration-300 shadow-md hover:shadow-lg"
+                      className="flex-1 bg-[#9bced3] hover:bg-[#8ab8c0] text-white sm:font-medium rounded-xl transition-all duration-300 shadow-md hover:shadow-lg"
                     >
-                      <ShoppingCart className="mr-2 h-4 w-4" />
-                      Add to Cart
+                      <ShoppingCart className="w-2 sm:mr-2 sm:h-4 sm:w-4" />
+                      <p className=" text-xs sm:text-sm sm:font-medium">Add to Cart</p >
                     </Button>
 
                     <Button
