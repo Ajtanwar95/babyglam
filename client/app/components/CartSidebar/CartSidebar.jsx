@@ -226,7 +226,7 @@ const CartSidebar = ({ products }) => {
                                   style: { background: '#10B981', color: '#fff' },
                                 });
                               }}
-                              className="mt-2 w-full bg-gradient-to-r from-blue-500 to-pink-500 hover:from-blue-600 hover:to-pink-600 transform hover:scale-105 transition-transform"
+                              className="mt-2 w-full bg-[#4e969c] hover:from-blue-600 hover:to-pink-600 transform hover:scale-105 transition-transform"
                             >
                               <ShoppingCart size={16} className="mr-1" /> Quick Add
                             </Button>
