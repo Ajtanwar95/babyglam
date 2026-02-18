@@ -44,7 +44,7 @@ export default function OrderConfirmation() {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-[#f0f9fb] via-[#e8f4f8] to-[#d9eff3] dark:from-gray-950 dark:via-gray-900 dark:to-gray-900 py-10 px-4 sm:px-6 lg:px-8">
-      <div className="max-w-4xl mx-auto">
+      <div className="max-w-4xl mx-auto mt-16">
         {/* Hero */}
         <div className="text-center mb-12 relative">
           <div className="relative inline-block">
