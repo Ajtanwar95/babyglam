@@ -3,8 +3,8 @@
 import React, { useEffect } from 'react';
 import { useSelector } from 'react-redux';
 import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { CheckCircle, Truck, Calendar, Mail, Phone, MapPin, Package, ArrowRight } from 'lucide-react';
+import { Card, CardContent } from '@/components/ui/card';
+import { CheckCircle, Truck, Calendar, Mail, Phone, MapPin, Package, ArrowRight, Sparkles } from 'lucide-react';
 import Link from 'next/link';
 import confetti from 'canvas-confetti';
 
@@ -12,87 +12,102 @@ export default function OrderConfirmation() {
   const cart = useSelector((state) => state.cart);
   const lastOrder = cart.lastOrder || { items: [], total: 0, address: {}, paymentId: '' };
 
-  // Launch confetti on page load
+  // Launch confetti + sparkle on load
   useEffect(() => {
-    const duration = 4 * 1000;
-    const animationEnd = Date.now() + duration;
+    // Main confetti burst
+    confetti({
+      particleCount: 100,
+      spread: 70,
+      origin: { y: 0.6 },
+      colors: ['#9bced3', '#7db8c0', '#ffffff', '#60a5fa', '#f472b6'],
+    });
 
-    const interval = setInterval(() => {
-      const timeLeft = animationEnd - Date.now();
-
-      if (timeLeft <= 0) {
-        clearInterval(interval);
-        return;
-      }
-
-      const particleCount = 50 * (timeLeft / duration);
+    // Follow-up sparkle bursts
+    const timer = setTimeout(() => {
       confetti({
-        particleCount,
-        angle: 60,
-        spread: 55,
-        origin: { x: 0 },
-        colors: ['#9bced3', '#7db8c0', '#ffffff', '#60a5fa'],
+        particleCount: 60,
+        angle: 45,
+        spread: 45,
+        origin: { x: 0.2, y: 0.4 },
+        ticks: 200,
+        gravity: 0.8,
+        scalar: 0.8,
       });
       confetti({
-        particleCount,
-        angle: 120,
-        spread: 55,
-        origin: { x: 1 },
-        colors: ['#9bced3', '#7db8c0', '#ffffff', '#60a5fa'],
+        particleCount: 60,
+        angle: 135,
+        spread: 45,
+        origin: { x: 0.8, y: 0.4 },
+        ticks: 200,
+        gravity: 0.8,
+        scalar: 0.8,
       });
-    }, 250);
+    }, 800);
 
-    return () => clearInterval(interval);
+    return () => clearTimeout(timer);
   }, []);
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-[#f0f9fb] via-[#e8f4f8] to-[#d9eff3] dark:from-gray-950 dark:via-gray-900 dark:to-gray-900 py-10 px-4 sm:px-6 lg:px-8">
       <div className="max-w-4xl mx-auto">
         {/* Hero Celebration */}
-        <div className="text-center mb-12">
-          <div className="inline-flex items-center justify-center w-24 h-24 bg-gradient-to-br from-[#9bced3] to-[#7db8c0] rounded-full shadow-2xl mb-6 animate-bounce-once">
-            <CheckCircle size={56} className="text-white" />
+        <div className="text-center mb-12 relative">
+          <div className="relative inline-block">
+            <div className="absolute -inset-4 bg-gradient-to-r from-[#9bced3]/30 to-[#7db8c0]/30 rounded-full blur-2xl opacity-70 animate-pulse-slow" />
+            <div className="relative inline-flex items-center justify-center w-28 h-28 sm:w-32 sm:h-32 bg-gradient-to-br from-[#9bced3] to-[#7db8c0] rounded-full shadow-2xl animate-bounce-once">
+              <CheckCircle size={72} className="text-white drop-shadow-lg" />
+              <Sparkles className="absolute -top-4 -right-4 text-white animate-spin-slow" size={32} />
+            </div>
           </div>
-          <h1 className="text-4xl sm:text-5xl font-bold bg-gradient-to-r from-[#9bced3] to-[#60a5fa] bg-clip-text text-transparent mb-4">
+
+          <h1 className="mt-8 text-4xl sm:text-5xl lg:text-6xl font-extrabold bg-gradient-to-r from-[#9bced3] via-[#60a5fa] to-[#7db8c0] bg-clip-text text-transparent">
             Order Confirmed!
           </h1>
-          <p className="text-lg sm:text-xl text-gray-700 dark:text-gray-300 max-w-2xl mx-auto">
-            Thank you for shopping with BabyGlam! Your order is being prepared with love.
+
+          <p className="mt-4 text-lg sm:text-xl text-gray-700 dark:text-gray-300 max-w-3xl mx-auto leading-relaxed">
+            Thank you for choosing <span className="font-semibold text-[#9bced3]">BabyGlam</span>!  
+            Your order is being prepared with love and care.
           </p>
         </div>
 
         {/* Main Content Card */}
-        <Card className="border-none shadow-2xl rounded-3xl overflow-hidden bg-white/90 dark:bg-gray-900/90 backdrop-blur-md">
-          <CardContent className="p-6 sm:p-10 space-y-10">
-            {/* Success Message */}
-            <div className="text-center space-y-4">
-              <p className="text-lg text-gray-700 dark:text-gray-300">
-                A confirmation email has been sent to <span className="font-semibold text-[#9bced3]">{lastOrder.address.email || 'your email'}</span>.
-              </p>
-              <p className="text-gray-600 dark:text-gray-400">
-                Order ID: <span className="font-mono font-medium text-[#9bced3]">{lastOrder.paymentId || 'N/A'}</span>
+        <Card className="border-none shadow-2xl rounded-3xl overflow-hidden bg-white/90 dark:bg-gray-900/90 backdrop-blur-lg">
+          <CardContent className="p-6 sm:p-10 lg:p-12 space-y-12">
+            {/* Success Message + Order ID */}
+            <div className="text-center space-y-6">
+              <div className="inline-flex items-center gap-4 bg-[#9bced3]/10 dark:bg-[#9bced3]/20 px-6 py-4 rounded-2xl">
+                <Mail size={24} className="text-[#9bced3]" />
+                <p className="text-lg text-gray-700 dark:text-gray-300">
+                  Confirmation sent to <span className="font-semibold text-[#9bced3]">{lastOrder.address.email || 'your email'}</span>
+                </p>
+              </div>
+
+              <p className="text-gray-600 dark:text-gray-400 text-lg">
+                Order ID: <span className="font-mono font-bold text-[#9bced3]">{lastOrder.paymentId || 'N/A'}</span>
               </p>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-8 lg:gap-12">
               {/* Order Summary */}
               <div className="space-y-6">
-                <div className="flex items-center gap-3">
-                  <Package size={28} className="text-[#9bced3]" />
-                  <h3 className="text-2xl font-semibold text-gray-900 dark:text-white">Order Summary</h3>
+                <div className="flex items-center gap-4">
+                  <div className="w-12 h-12 rounded-full bg-[#9bced3]/20 flex items-center justify-center">
+                    <Package size={24} className="text-[#9bced3]" />
+                  </div>
+                  <h3 className="text-2xl font-bold text-gray-900 dark:text-white">Order Summary</h3>
                 </div>
 
-                <div className="space-y-4 bg-gray-50 dark:bg-gray-800/50 p-6 rounded-2xl">
+                <div className="space-y-5 bg-gray-50/80 dark:bg-gray-800/50 p-6 rounded-2xl border border-gray-100 dark:border-gray-700">
                   {lastOrder.items.length > 0 ? (
                     lastOrder.items.map((item) => (
-                      <div key={item._id} className="flex justify-between items-center">
-                        <div className="flex items-center gap-3">
-                          <div className="w-12 h-12 rounded-lg overflow-hidden bg-white dark:bg-gray-700 flex-shrink-0">
+                      <div key={item._id} className="flex justify-between items-center py-2 border-b border-gray-200 dark:border-gray-700 last:border-b-0">
+                        <div className="flex items-center gap-4">
+                          <div className="w-14 h-14 rounded-lg overflow-hidden bg-white dark:bg-gray-800 flex-shrink-0 shadow-sm">
                             <Image
                               src={item.media?.[0] || '/placeholder.png'}
                               alt={item.title}
-                              width={48}
-                              height={48}
+                              width={56}
+                              height={56}
                               className="object-cover"
                             />
                           </div>
@@ -100,25 +115,25 @@ export default function OrderConfirmation() {
                             <p className="font-medium text-gray-900 dark:text-white line-clamp-1">
                               {item.title}
                             </p>
-                            <p className="text-sm text-gray-600 dark:text-gray-400">
+                            <p className="text-sm text-gray-600 dark:text-gray-400 mt-1">
                               Qty: {item.quantity}
                             </p>
                           </div>
                         </div>
-                        <p className="font-semibold text-[#9bced3]">
+                        <p className="font-bold text-[#9bced3] text-lg">
                           ₹{(item.price * item.quantity).toFixed(2)}
                         </p>
                       </div>
                     ))
                   ) : (
-                    <p className="text-gray-500 dark:text-gray-400 text-center py-6">
+                    <p className="text-center py-8 text-gray-500 dark:text-gray-400">
                       No items to display
                     </p>
                   )}
 
-                  <div className="border-t border-gray-200 dark:border-gray-700 pt-4 mt-4">
-                    <div className="flex justify-between text-lg font-bold text-gray-900 dark:text-white">
-                      <span>Total</span>
+                  <div className="pt-4 border-t border-gray-200 dark:border-gray-700">
+                    <div className="flex justify-between text-xl font-bold text-gray-900 dark:text-white">
+                      <span>Total Amount</span>
                       <span className="text-[#9bced3]">₹{lastOrder.total.toFixed(2)}</span>
                     </div>
                   </div>
@@ -127,56 +142,63 @@ export default function OrderConfirmation() {
 
               {/* Shipping Address */}
               <div className="space-y-6">
-                <div className="flex items-center gap-3">
-                  <Truck size={28} className="text-[#9bced3]" />
-                  <h3 className="text-2xl font-semibold text-gray-900 dark:text-white">Shipping Address</h3>
+                <div className="flex items-center gap-4">
+                  <div className="w-12 h-12 rounded-full bg-[#9bced3]/20 flex items-center justify-center">
+                    <Truck size={24} className="text-[#9bced3]" />
+                  </div>
+                  <h3 className="text-2xl font-bold text-gray-900 dark:text-white">Delivery Address</h3>
                 </div>
 
-                <div className="bg-gray-50 dark:bg-gray-800/50 p-6 rounded-2xl space-y-3">
-                  <p className="font-medium text-gray-900 dark:text-white flex items-start gap-2">
-                    <MapPin size={20} className="text-[#9bced3] mt-1 flex-shrink-0" />
+                <div className="bg-gray-50/80 dark:bg-gray-800/50 p-6 rounded-2xl border border-gray-100 dark:border-gray-700 space-y-4">
+                  <p className="font-medium text-lg text-gray-900 dark:text-white flex items-start gap-3">
+                    <MapPin size={22} className="text-[#9bced3] mt-1 flex-shrink-0" />
                     {lastOrder.address.name || '—'}
                   </p>
-                  <p className="text-gray-700 dark:text-gray-300 pl-7">
-                    {lastOrder.address.line1 || '—'}
-                  </p>
-                  <p className="text-gray-700 dark:text-gray-300 pl-7">
-                    {lastOrder.address.city}, {lastOrder.address.state} {lastOrder.address.zip}
-                  </p>
-                  <p className="text-gray-700 dark:text-gray-300 pl-7">
-                    {lastOrder.address.country || 'India'}
-                  </p>
-                  <div className="pt-2 border-t border-gray-200 dark:border-gray-700">
-                    <p className="text-gray-700 dark:text-gray-300 flex items-center gap-2">
-                      <Phone size={18} className="text-[#9bced3]" />
-                      {lastOrder.address.phone || '—'}
+
+                  <div className="space-y-2 text-gray-700 dark:text-gray-300 pl-9">
+                    <p>{lastOrder.address.line1 || '—'}</p>
+                    <p>
+                      {lastOrder.address.city}, {lastOrder.address.state} {lastOrder.address.zip}
                     </p>
-                    <p className="text-gray-700 dark:text-gray-300 flex items-center gap-2 mt-2">
-                      <Mail size={18} className="text-[#9bced3]" />
-                      {lastOrder.address.email || '—'}
+                    <p>{lastOrder.address.country || 'India'}</p>
+                  </div>
+
+                  <div className="pt-4 border-t border-gray-200 dark:border-gray-700 space-y-3">
+                    <p className="flex items-center gap-3">
+                      <Phone size={20} className="text-[#9bced3]" />
+                      <span>{lastOrder.address.phone || '—'}</span>
+                    </p>
+                    <p className="flex items-center gap-3">
+                      <Mail size={20} className="text-[#9bced3]" />
+                      <span>{lastOrder.address.email || '—'}</span>
                     </p>
                   </div>
                 </div>
               </div>
             </div>
 
-            {/* Delivery Info & CTA */}
-            <div className="text-center space-y-6 pt-8 border-t border-gray-200 dark:border-gray-700">
-              <div className="inline-flex items-center gap-3 bg-[#9bced3]/10 dark:bg-[#9bced3]/20 px-6 py-4 rounded-2xl">
-                <Calendar size={24} className="text-[#9bced3]" />
-                <p className="text-lg font-medium text-gray-900 dark:text-white">
-                  Expected Delivery: <span className="font-bold">3–5 business days</span>
-                </p>
+            {/* Delivery & Next Steps */}
+            <div className="text-center space-y-8 pt-10 border-t border-gray-200 dark:border-gray-700">
+              <div className="inline-flex flex-col sm:flex-row items-center gap-4 bg-gradient-to-r from-[#9bced3]/10 to-[#7db8c0]/10 px-8 py-5 rounded-2xl shadow-inner">
+                <Calendar size={32} className="text-[#9bced3]" />
+                <div>
+                  <p className="text-lg font-medium text-gray-900 dark:text-white">
+                    Expected Delivery
+                  </p>
+                  <p className="text-xl font-bold text-[#9bced3] mt-1">
+                    3–5 Business Days
+                  </p>
+                </div>
               </div>
 
-              <p className="text-gray-600 dark:text-gray-400 text-lg">
-                Track your order in your account or check your email for updates.
+              <p className="text-lg text-gray-600 dark:text-gray-400 max-w-2xl mx-auto">
+                Track your order anytime in your account or reply to the confirmation email if you have questions.
               </p>
 
               <Link href="/">
-                <Button className="bg-gradient-to-r from-[#9bced3] to-[#7db8c0] hover:brightness-110 text-white font-bold text-xl py-7 px-12 rounded-2xl shadow-xl hover:shadow-2xl transition-all duration-300 flex items-center gap-3 mx-auto">
+                <Button className="bg-gradient-to-r from-[#9bced3] to-[#7db8c0] hover:brightness-110 text-white font-bold text-xl py-7 px-14 rounded-2xl shadow-2xl hover:shadow-3xl transition-all duration-300 flex items-center gap-3 mx-auto group">
                   Continue Shopping
-                  <ArrowRight size={24} />
+                  <ArrowRight size={28} className="group-hover:translate-x-1 transition-transform" />
                 </Button>
               </Link>
             </div>
