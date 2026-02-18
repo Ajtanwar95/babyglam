@@ -12,45 +12,40 @@ export default function OrderConfirmation() {
   const cart = useSelector((state) => state.cart);
   const lastOrder = cart.lastOrder || { items: [], total: 0, address: {}, paymentId: '' };
 
-  // Launch confetti + sparkle on load
   useEffect(() => {
-    // Main confetti burst
-    confetti({
-      particleCount: 100,
-      spread: 70,
-      origin: { y: 0.6 },
-      colors: ['#9bced3', '#7db8c0', '#ffffff', '#60a5fa', '#f472b6'],
-    });
+    const duration = 4 * 1000;
+    const animationEnd = Date.now() + duration;
 
-    // Follow-up sparkle bursts
-    const timer = setTimeout(() => {
+    const interval = setInterval(() => {
+      const timeLeft = animationEnd - Date.now();
+      if (timeLeft <= 0) {
+        clearInterval(interval);
+        return;
+      }
+      const particleCount = 50 * (timeLeft / duration);
       confetti({
-        particleCount: 60,
-        angle: 45,
-        spread: 45,
-        origin: { x: 0.2, y: 0.4 },
-        ticks: 200,
-        gravity: 0.8,
-        scalar: 0.8,
+        particleCount,
+        angle: 60,
+        spread: 55,
+        origin: { x: 0 },
+        colors: ['#9bced3', '#7db8c0', '#ffffff', '#60a5fa'],
       });
       confetti({
-        particleCount: 60,
-        angle: 135,
-        spread: 45,
-        origin: { x: 0.8, y: 0.4 },
-        ticks: 200,
-        gravity: 0.8,
-        scalar: 0.8,
+        particleCount,
+        angle: 120,
+        spread: 55,
+        origin: { x: 1 },
+        colors: ['#9bced3', '#7db8c0', '#ffffff', '#60a5fa'],
       });
-    }, 800);
+    }, 250);
 
-    return () => clearTimeout(timer);
+    return () => clearInterval(interval);
   }, []);
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-[#f0f9fb] via-[#e8f4f8] to-[#d9eff3] dark:from-gray-950 dark:via-gray-900 dark:to-gray-900 py-10 px-4 sm:px-6 lg:px-8">
       <div className="max-w-4xl mx-auto">
-        {/* Hero Celebration */}
+        {/* Hero */}
         <div className="text-center mb-12 relative">
           <div className="relative inline-block">
             <div className="absolute -inset-4 bg-gradient-to-r from-[#9bced3]/30 to-[#7db8c0]/30 rounded-full blur-2xl opacity-70 animate-pulse-slow" />
@@ -70,10 +65,10 @@ export default function OrderConfirmation() {
           </p>
         </div>
 
-        {/* Main Content Card */}
+        {/* Main Card */}
         <Card className="border-none shadow-2xl rounded-3xl overflow-hidden bg-white/90 dark:bg-gray-900/90 backdrop-blur-lg">
           <CardContent className="p-6 sm:p-10 lg:p-12 space-y-12">
-            {/* Success Message + Order ID */}
+            {/* Success Info */}
             <div className="text-center space-y-6">
               <div className="inline-flex items-center gap-4 bg-[#9bced3]/10 dark:bg-[#9bced3]/20 px-6 py-4 rounded-2xl">
                 <Mail size={24} className="text-[#9bced3]" />
@@ -103,12 +98,13 @@ export default function OrderConfirmation() {
                       <div key={item._id} className="flex justify-between items-center py-2 border-b border-gray-200 dark:border-gray-700 last:border-b-0">
                         <div className="flex items-center gap-4">
                           <div className="w-14 h-14 rounded-lg overflow-hidden bg-white dark:bg-gray-800 flex-shrink-0 shadow-sm">
-                            <Image
+                            <img
                               src={item.media?.[0] || '/placeholder.png'}
                               alt={item.title}
                               width={56}
                               height={56}
-                              className="object-cover"
+                              className="w-full h-full object-cover"
+                              loading="lazy"
                             />
                           </div>
                           <div>
@@ -140,7 +136,7 @@ export default function OrderConfirmation() {
                 </div>
               </div>
 
-              {/* Shipping Address */}
+              {/* Shipping Address – unchanged but kept for completeness */}
               <div className="space-y-6">
                 <div className="flex items-center gap-4">
                   <div className="w-12 h-12 rounded-full bg-[#9bced3]/20 flex items-center justify-center">
@@ -177,7 +173,7 @@ export default function OrderConfirmation() {
               </div>
             </div>
 
-            {/* Delivery & Next Steps */}
+            {/* Delivery Info & CTA */}
             <div className="text-center space-y-8 pt-10 border-t border-gray-200 dark:border-gray-700">
               <div className="inline-flex flex-col sm:flex-row items-center gap-4 bg-gradient-to-r from-[#9bced3]/10 to-[#7db8c0]/10 px-8 py-5 rounded-2xl shadow-inner">
                 <Calendar size={32} className="text-[#9bced3]" />
