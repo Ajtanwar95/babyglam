@@ -57,11 +57,12 @@ const CartSidebar = ({ products }) => {
   const similarProducts = getSimilarProducts();
 
   const handleCheckout = (method = 'online') => {
-    dispatch(clearCart());
     toast.success(`Proceeding to ${method === 'cod' ? 'Cash on Delivery' : 'Online Checkout'}.`, {
       style: { background: '#10B981', color: '#fff' },
     });
     window.location.href = `/checkout?method=${method}`;
+   
+
   };
 
   const handleQuantityChange = (id, quantity, stock) => {
