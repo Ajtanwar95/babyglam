@@ -174,10 +174,10 @@ export default function ProductDetail() {
           </span>
         </nav>
 
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 xl:gap-12">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 xl:gap-12 mt-15">
           {/* Image Section */}
-          <div className="space-y-4 lg:space-y-6">
-            <div className="relative aspect-[4/5] sm:aspect-[4/4] lg:aspect-[4/5] bg-white dark:bg-gray-900 rounded-2xl overflow-hidden shadow-2xl border border-gray-100 dark:border-gray-800 group mx-auto max-w-[90%] sm:max-w-[85%] lg:max-w-full">
+          <div className="space-y-4 lg:space-y-6 ">
+            <div className="relative aspect-[5/5] sm:aspect-[4/4] lg:aspect-[4/5] bg-white mt-6 dark:bg-gray-900 rounded-2xl overflow-hidden shadow-2xl border border-gray-100 dark:border-gray-800 group mx-auto max-w-[90%] sm:max-w-[85%] lg:max-w-full">
               <Image
                 src={product.media[selectedImage] || '/placeholder.png'}
                 alt={product.title}

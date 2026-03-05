@@ -229,7 +229,7 @@ const Reviews = () => {
                 {/* Review Image */}
                 {review.file && (
                   <div className="mt-6">
-                    <Image
+                    <img
                       src={review.file}
                       alt="Review photo"
                       width={120}
@@ -319,7 +319,7 @@ const Reviews = () => {
                 </label>
                 {previewUrl && (
                   <div className="relative w-20 h-20 rounded-lg overflow-hidden border border-gray-300 dark:border-gray-600">
-                    <Image src={previewUrl} alt="Preview" fill className="object-cover" />
+                    <img src={previewUrl} alt="Preview" fill className="object-cover" />
                   </div>
                 )}
               </div>
