@@ -13,6 +13,7 @@ router.post('/', async (req, res) => {
       price: item.price,
       quantity: item.quantity,
       stock: item.stock || 0,
+      media: item.media || []
     }));
 
     const order = new Order({
@@ -21,6 +22,7 @@ router.post('/', async (req, res) => {
       total,
       address,
       paymentId,
+      status: 'Pending'
     });
     await order.save();
     res.status(201).json({ message: 'Order created', order });
