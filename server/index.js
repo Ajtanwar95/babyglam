@@ -8,7 +8,8 @@ const productRoutes = require('./routes/productRoutes');
 const reviewRoutes = require('./routes/reviewRoutes');
 const paymentRoutes = require('./routes/paymentRoutes');
 const orderRoutes = require('./routes/orderRoutes');
-
+const trackOrderRoutes = require('./routes/trackOrder');
+const orderConfirmationEmail = require('./routes/sendOrderEmail');
 dotenv.config();
 
 const app = express();
@@ -26,6 +27,8 @@ app.use('/api/v2/products', productRoutes);
 app.use('/api/v2/reviews', reviewRoutes);
 app.use('/api/v2/payments', paymentRoutes);
 app.use('/api/v2/orders', orderRoutes);
+app.use('/api/v2/track', trackOrderRoutes);
+app.use('/api/v2/send-order-email',orderConfirmationEmail);
 app.get('/', (req, res) => res.send('API is running'));
 
 // DB Connection

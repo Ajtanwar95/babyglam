@@ -7,11 +7,13 @@ import { Card, CardContent } from '@/components/ui/card';
 import { CheckCircle, Truck, Calendar, Mail, Phone, MapPin, Package, ArrowRight, Sparkles } from 'lucide-react';
 import Link from 'next/link';
 import confetti from 'canvas-confetti';
+import { useSearchParams } from 'next/navigation';
 
 export default function OrderConfirmation() {
   const cart = useSelector((state) => state.cart);
   const lastOrder = cart.lastOrder || { items: [], total: 0, address: {}, paymentId: '' };
-
+const searchParams = useSearchParams();
+const orderIdFromUrl = searchParams.get('orderId');
   useEffect(() => {
     const duration = 4 * 1000;
     const animationEnd = Date.now() + duration;
@@ -200,6 +202,22 @@ export default function OrderConfirmation() {
             </div>
           </CardContent>
         </Card>
+        <div className="text-center mt-12 bg-white dark:bg-gray-800 p-8 rounded-3xl shadow-xl">
+      <h3 className="text-2xl font-bold mb-4">Track Your Order</h3>
+      <p className="text-gray-600 dark:text-gray-400 mb-6">
+        You can track your order status anytime using this link:
+      </p>
+      
+      <div className="bg-gray-100 dark:bg-gray-700 p-4 rounded-xl font-mono text-sm break-all mb-6">
+        {`${window.location.origin}/track-order/${orderIdFromUrl || lastOrder.paymentId || lastOrder.orderId}`}
+      </div>
+
+      <Link href={`/track-order/${orderIdFromUrl || lastOrder.paymentId || lastOrder.orderId}`}>
+        <Button className="bg-[#9bced3] hover:bg-[#8ab8c0] text-white font-semibold px-10 py-6 rounded-2xl text-lg">
+          Track Order Status
+        </Button>
+      </Link>
+    </div>
       </div>
     </div>
   );

@@ -74,45 +74,62 @@ export default function Checkout() {
         name: 'BabyGlam',
         description: 'Baby Products Purchase',
         order_id: razorpayOrderId,
-        handler: async (response) => {
-          const { razorpay_payment_id, razorpay_order_id, razorpay_signature } = response;
+      handler: async (response) => {
+  const { razorpay_payment_id, razorpay_order_id, razorpay_signature } = response;
 
-          // Verify payment
-          const verifyResponse = await axios.post(`${API_BASE_URL}/payments/verify-payment`, {
-            razorpay_order_id,
-            razorpay_payment_id,
-            razorpay_signature,
-          });
+  try {
+    // 1. Verify payment
+    const verifyResponse = await axios.post(`${API_BASE_URL}/payments/verify-payment`, {
+      razorpay_order_id,
+      razorpay_payment_id,
+      razorpay_signature,
+    });
 
-          if (verifyResponse.data.success) {
-            // Save order
-            dispatch(setLastOrder({
-              items: cart.items,
-              total,
-              address,
-              paymentId: razorpay_payment_id,
-              orderId: razorpay_order_id,
-            }));
+    if (verifyResponse.data.success) {
+      // 2. Save order to database (this was missing!)
+      const saveOrderRes = await axios.post(`${API_BASE_URL}/orders`, {
+        orderId: razorpay_order_id,
+        paymentId: razorpay_payment_id,
+        items: cart.items,
+        total,
+        address,
+      });
 
-            await axios.post(`${API_BASE_URL}/orders`, {
-              items: cart.items,
-              total,
-              address,
-              paymentId: razorpay_payment_id,
-              orderId: razorpay_order_id,
-            });
+      // 3. Save to Redux + clear cart
+      dispatch(setLastOrder({
+        items: cart.items,
+        total,
+        address,
+        paymentId: razorpay_payment_id,
+        orderId: razorpay_order_id,
+      }));
 
-            dispatch(clearCart());
-            toast.success('Payment Successful! Order placed.', {
-              style: { background: '#10B981', color: '#fff' },
-            });
-            router.push('/order-confirmation');
-          } else {
-            toast.error('Payment verification failed', {
-              style: { background: '#EF4444', color: '#fff' },
-            });
+      // 4. Send confirmation email
+      try {
+        await axios.post(`${API_BASE_URL}/send-order-email`, {
+          email: address.email,
+          orderId: razorpay_order_id,
+          orderData: {
+            orderId: razorpay_order_id,
+            total,
+            address,
+            items: cart.items,
+            paymentId: razorpay_payment_id
           }
-        },
+        });
+      } catch (emailError) {
+        console.warn("Email sending failed (non-critical):", emailError);
+      }
+
+      dispatch(clearCart());
+      toast.success('Payment Successful! Order placed.', { style: { background: '#10B981', color: '#fff' } });
+      router.push(`/order-confirmation?orderId=${razorpay_order_id}`);
+    }
+  } catch (err) {
+    console.error("Payment finalization error:", err);
+    toast.error("Something went wrong while saving your order.");
+  }
+},
         prefill: {
           name: address.name,
           email: address.email,
