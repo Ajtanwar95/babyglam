@@ -90,7 +90,14 @@ export default function Checkout() {
       const saveOrderRes = await axios.post(`${API_BASE_URL}/orders`, {
         orderId: razorpay_order_id,
         paymentId: razorpay_payment_id,
-        items: cart.items,
+        items: cart.items.map(item => ({
+      _id: item._id,
+      title: item.title,
+      price: item.price,
+      quantity: item.quantity,
+      stock: item.stock || 0,
+      media: item.media || []          // ← Explicitly send media
+    })),
         total,
         address,
       });
