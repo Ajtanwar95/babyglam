@@ -1,35 +1,52 @@
-const express = require('express');
+const express = require("express");
 const router = express.Router();
-const cloudinary = require('../lib/cloudinary');
-const Product = require('../models/Product');
-const multer = require('multer');
-const { body, validationResult } = require('express-validator');
+const cloudinary = require("../lib/cloudinary");
+const Product = require("../models/Product");
+const multer = require("multer");
+const { body, validationResult } = require("express-validator");
 
 const storage = multer.memoryStorage();
 const upload = multer({ storage, limits: { fileSize: 5 * 1024 * 1024 } }); // 5MB limit per file
 
 // Get All Products
-router.get('/', async (req, res) => {
+router.get("/", async (req, res) => {
   try {
     const products = await Product.find();
     res.json(products);
   } catch (error) {
-    res.status(500).json({ error: 'Server error: ' + error.message });
+    res.status(500).json({ error: "Server error: " + error.message });
   }
 });
 
 // Add Product
 router.post(
-  '/add',
-  upload.array('media', 5),
+  "/add",
+  upload.array("media", 5),
   [
-    body('title').notEmpty().withMessage('Product title is required'),
-    body('description').notEmpty().withMessage('Description is required'),
-    body('category').notEmpty().withMessage('Category is required'),
-    body('price').isFloat({ min: 0 }).withMessage('Price must be a positive number'),
-    body('costPerItem').isFloat({ min: 0 }).withMessage('Cost per item must be a positive number'),
-    body('weight').isFloat({ min: 0 }).withMessage('Weight must be a positive number'),
-    body('stock').isInt({ min: 0 }).withMessage('Stock must be a non-negative integer'),
+    body("title").notEmpty().withMessage("Product title is required"),
+    body("description").notEmpty().withMessage("Description is required"),
+    body("category").notEmpty().withMessage("Category is required"),
+    body("price")
+      .isFloat({ min: 0 })
+      .withMessage("Price must be a positive number"),
+    body("costPerItem")
+      .isFloat({ min: 0 })
+      .withMessage("Cost per item must be a positive number"),
+    body("weight")
+      .isFloat({ min: 0 })
+      .withMessage("Weight must be a positive number"),
+    body("length")
+      .isFloat({ min: 1 })
+      .withMessage("Length must be at least 1 cm"),
+    body("breadth")
+      .isFloat({ min: 1 })
+      .withMessage("Breadth must be at least 1 cm"),
+    body("height")
+      .isFloat({ min: 1 })
+      .withMessage("Height must be at least 1 cm"),
+    body("stock")
+      .isInt({ min: 0 })
+      .withMessage("Stock must be a non-negative integer"),
   ],
   async (req, res) => {
     try {
@@ -39,26 +56,31 @@ router.post(
       }
 
       if (!req.files || req.files.length === 0) {
-        return res.status(400).json({ error: 'At least one media file is required' });
+        return res
+          .status(400)
+          .json({ error: "At least one media file is required" });
       }
 
-      const uploadPromises = req.files.map((file) =>
-        new Promise((resolve, reject) => {
-          cloudinary.uploader.upload_stream(
-            {
-              folder: 'babyglam',
-              format: file.mimetype.startsWith('video') ? 'mp4' : 'webp',
-              overwrite: true,
-              use_filename: true,
-              unique_filename: true,
-              access_mode: 'public',
-            },
-            (error, result) => {
-              if (error) return reject(error);
-              resolve(result.secure_url);
-            }
-          ).end(file.buffer);
-        })
+      const uploadPromises = req.files.map(
+        (file) =>
+          new Promise((resolve, reject) => {
+            cloudinary.uploader
+              .upload_stream(
+                {
+                  folder: "babyglam",
+                  format: file.mimetype.startsWith("video") ? "mp4" : "webp",
+                  overwrite: true,
+                  use_filename: true,
+                  unique_filename: true,
+                  access_mode: "public",
+                },
+                (error, result) => {
+                  if (error) return reject(error);
+                  resolve(result.secure_url);
+                },
+              )
+              .end(file.buffer);
+          }),
       );
 
       const mediaUrls = await Promise.all(uploadPromises);
@@ -77,30 +99,56 @@ router.post(
         margin,
         profit,
         weight: parseFloat(req.body.weight),
+        length: parseFloat(req.body.length),
+        breadth: parseFloat(req.body.breadth),
+        height: parseFloat(req.body.height),
         stock: parseInt(req.body.stock),
       });
 
       await product.save();
-      res.json({ message: 'Product added', product });
+      res.json({ message: "Product added", product });
     } catch (error) {
-      console.error('Product add error:', error);
-      res.status(500).json({ error: 'Failed to add product: ' + error.message });
+      console.error("Product add error:", error);
+      res
+        .status(500)
+        .json({ error: "Failed to add product: " + error.message });
     }
-  }
+  },
 );
 
 // Update Product
 router.patch(
-  '/:id',
-  upload.array('media', 5),
+  "/:id",
+  upload.array("media", 5),
   [
-    body('title').notEmpty().withMessage('Product title is required'),
-    body('description').notEmpty().withMessage('Description is required'),
-    body('category').notEmpty().withMessage('Category is required'),
-    body('price').isFloat({ min: 0 }).withMessage('Price must be a positive number'),
-    body('costPerItem').isFloat({ min: 0 }).withMessage('Cost per item must be a positive number'),
-    body('weight').isFloat({ min: 0 }).withMessage('Weight must be a positive number'),
-    body('stock').isInt({ min: 0 }).withMessage('Stock must be a non-negative integer'),
+    body("title").notEmpty().withMessage("Product title is required"),
+    body("description").notEmpty().withMessage("Description is required"),
+    body("category").notEmpty().withMessage("Category is required"),
+    body("price")
+      .isFloat({ min: 0 })
+      .withMessage("Price must be a positive number"),
+    body("costPerItem")
+      .isFloat({ min: 0 })
+      .withMessage("Cost per item must be a positive number"),
+    body("weight")
+      .isFloat({ min: 0 })
+      .withMessage("Weight must be a positive number"),
+
+    body("length")
+      .isFloat({ min: 1 })
+      .withMessage("Length must be at least 1 cm"),
+
+    body("breadth")
+      .isFloat({ min: 1 })
+      .withMessage("Breadth must be at least 1 cm"),
+
+    body("height")
+      .isFloat({ min: 1 })
+      .withMessage("Height must be at least 1 cm"),
+
+    body("stock")
+      .isInt({ min: 0 })
+      .withMessage("Stock must be a non-negative integer"),
   ],
   async (req, res) => {
     try {
@@ -111,28 +159,31 @@ router.patch(
 
       const product = await Product.findById(req.params.id);
       if (!product) {
-        return res.status(404).json({ error: 'Product not found' });
+        return res.status(404).json({ error: "Product not found" });
       }
 
       let mediaUrls = product.media; // Keep existing media if no new files
       if (req.files && req.files.length > 0) {
-        const uploadPromises = req.files.map((file) =>
-          new Promise((resolve, reject) => {
-            cloudinary.uploader.upload_stream(
-              {
-                folder: 'babyglam',
-                format: file.mimetype.startsWith('video') ? 'mp4' : 'webp',
-                overwrite: true,
-                use_filename: true,
-                unique_filename: true,
-                access_mode: 'public',
-              },
-              (error, result) => {
-                if (error) return reject(error);
-                resolve(result.secure_url);
-              }
-            ).end(file.buffer);
-          })
+        const uploadPromises = req.files.map(
+          (file) =>
+            new Promise((resolve, reject) => {
+              cloudinary.uploader
+                .upload_stream(
+                  {
+                    folder: "babyglam",
+                    format: file.mimetype.startsWith("video") ? "mp4" : "webp",
+                    overwrite: true,
+                    use_filename: true,
+                    unique_filename: true,
+                    access_mode: "public",
+                  },
+                  (error, result) => {
+                    if (error) return reject(error);
+                    resolve(result.secure_url);
+                  },
+                )
+                .end(file.buffer);
+            }),
         );
         mediaUrls = await Promise.all(uploadPromises);
       }
@@ -151,35 +202,42 @@ router.patch(
       product.margin = margin;
       product.profit = profit;
       product.weight = parseFloat(req.body.weight);
+      product.length = parseFloat(req.body.length);
+      product.breadth = parseFloat(req.body.breadth);
+      product.height = parseFloat(req.body.height);
       product.stock = parseInt(req.body.stock);
 
       await product.save();
-      res.json({ message: 'Product updated', product });
+      res.json({ message: "Product updated", product });
     } catch (error) {
-      console.error('Product update error:', error);
-      res.status(500).json({ error: 'Failed to update product: ' + error.message });
+      console.error("Product update error:", error);
+      res
+        .status(500)
+        .json({ error: "Failed to update product: " + error.message });
     }
-  }
+  },
 );
 
 // Delete Product
-router.delete('/:id', async (req, res) => {
+router.delete("/:id", async (req, res) => {
   try {
     const product = await Product.findByIdAndDelete(req.params.id);
     if (!product) {
-      return res.status(404).json({ error: 'Product not found' });
+      return res.status(404).json({ error: "Product not found" });
     }
     // Optionally delete media from Cloudinary
     await Promise.all(
       product.media.map((url) => {
-        const publicId = url.split('/').pop().split('.')[0];
+        const publicId = url.split("/").pop().split(".")[0];
         return cloudinary.uploader.destroy(`babyglam/${publicId}`);
-      })
+      }),
     );
-    res.json({ message: 'Product deleted' });
+    res.json({ message: "Product deleted" });
   } catch (error) {
-    console.error('Product delete error:', error);
-    res.status(500).json({ error: 'Failed to delete product: ' + error.message });
+    console.error("Product delete error:", error);
+    res
+      .status(500)
+      .json({ error: "Failed to delete product: " + error.message });
   }
 });
 
